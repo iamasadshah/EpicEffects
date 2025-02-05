@@ -2,10 +2,6 @@
 
 🚀 A collection of **stunning animated components** built using **HTML, CSS, and JavaScript**. Each component features unique animations to make your UI more engaging and visually appealing.
 
-## 🌟 Preview
-
-![EpicEffects Preview](https://your-image-url.com)
-
 ## 🎯 Features
 
 - ⚡ **Pure CSS & JavaScript Animations** – No extra libraries required
