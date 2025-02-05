@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Next-Level Hover Effect Cards</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #1e1e1e;
+      }
+      .container {
+        display: flex;
+        gap: 20px;
+      }
+      .card {
+        width: 220px;
+        height: 320px;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+      .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+      /* First Card Effect - 3D Tilt */
+      .card:nth-child(1) {
+        transform-style: preserve-3d;
+      }
+      .card:nth-child(1):hover {
+        transform: rotate3d(1, 1, 0, 40deg);
+      }
+      /* Second Card Effect - Ripple Effect */
+      .card:nth-child(2) {
+        position: relative;
+        overflow: hidden;
+      }
+      .card:nth-child(2):hover::after {
+        content: "";
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: 50%;
+        left: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.4) 50%,
+          transparent 40%
+        );
+        transform: translate(-50%, -50%) scale(0);
+        animation: ripple 1s ease-out;
+      }
+      @keyframes ripple {
+        to {
+          transform: translate(-50%, -50%) scale(2);
+          opacity: 0;
+        }
+      }
+      /* Third Card Effect - Glass Morphism with Animated Text */
+      .card:nth-child(3) .content {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: black;
+        font-weight: bold;
+        font-size: 1.2rem;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+      .card:nth-child(3):hover .content {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <img
+          src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg"
+          alt="Tech Image"
+        />
+      </div>
+      <div class="card">
+        <img
+          src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg"
+          alt="Nature Image"
+        />
+      </div>
+      <div class="card">
+        <img
+          src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg"
+          alt="Art Image"
+        />
+        <div class="content">Hello, I'm Here!</div>
+      </div>
+    </div>
+  </body>
+</html>
