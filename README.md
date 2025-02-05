@@ -29,7 +29,7 @@ cd EpicEffects
 
 ### 2️⃣ Open in Browser
 
-Simply open `index.html` in your browser to see the magic!
+Simply open `[AnimationName].html` in your browser to see the magic!
 
 ## ✨ Customization
 
