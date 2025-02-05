@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>I LOVE YOU Animation</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #111;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        position: relative;
+        cursor: pointer;
+      }
+      .text {
+        font-size: 50px;
+        font-weight: bold;
+        color: #ff416c;
+        text-transform: uppercase;
+        position: relative;
+        opacity: 0;
+        transform: scale(0);
+        transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+      }
+      .heart {
+        width: 100px;
+        height: 100px;
+        background-color: #ff416c;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(45deg) scale(1);
+        transition: transform 0.6s ease-in-out;
+      }
+      .heart::before,
+      .heart::after {
+        content: "";
+        width: 100px;
+        height: 100px;
+        background-color: #ff416c;
+        border-radius: 50%;
+        position: absolute;
+      }
+      .heart::before {
+        top: -50px;
+        left: 0;
+      }
+      .heart::after {
+        left: -50px;
+        top: 0;
+      }
+      .container:hover .text {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .container:hover .heart {
+        transform: translate(-50%, -50%) rotate(45deg) scale(0);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="heart"></div>
+      <div class="text">I LOVE YOU</div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>I LOVE YOU Animation</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #0d0d0d;
+        font-family: "Arial", sans-serif;
+        overflow: hidden;
+      }
+      .container {
+        text-align: center;
+        position: relative;
+        cursor: pointer;
+      }
+      .text {
+        font-size: 50px;
+        font-weight: bold;
+        color: #ff0055;
+        text-transform: uppercase;
+        display: inline-block;
+        opacity: 0;
+        transform: scale(0.5);
+        animation: appear 2s ease-out forwards;
+      }
+      .heart {
+        font-size: 80px;
+        color: #ff0055;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+        animation: heartbeat 2s ease-out 0.5s forwards;
+      }
+      .container:hover .heart {
+        animation: explode 0.8s ease-out forwards;
+      }
+
+      @keyframes appear {
+        0% {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes heartbeat {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.5);
+        }
+        50% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1.2);
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      @keyframes explode {
+        0% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.5);
+          opacity: 0.5;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(2);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="heart">❤️</div>
+      <div class="text">I LOVE YOU</div>
+    </div>
+  </body>
+</html>
