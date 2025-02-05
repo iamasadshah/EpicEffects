@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amazing Loaders</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: #121212;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        display: flex;
+        gap: 30px;
+      }
+      .loader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 80px;
+      }
+      /* Loader 1: Spinner */
+      .spinner {
+        border: 6px solid rgba(255, 255, 255, 0.2);
+        border-top: 6px solid #fff;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      /* Loader 2: Dot Pulse */
+      .dot-pulse span {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin: 0 3px;
+        background: #fff;
+        border-radius: 50%;
+        animation: pulse 1.2s infinite ease-in-out;
+      }
+      .dot-pulse span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .dot-pulse span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.3);
+        }
+      }
+      /* Loader 3: Wave */
+      .wave span {
+        display: inline-block;
+        width: 5px;
+        height: 20px;
+        margin: 0 3px;
+        background: #fff;
+        animation: wave 1s infinite ease-in-out;
+      }
+      .wave span:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .wave span:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      .wave span:nth-child(4) {
+        animation-delay: 0.3s;
+      }
+      .wave span:nth-child(5) {
+        animation-delay: 0.4s;
+      }
+      @keyframes wave {
+        0%,
+        100% {
+          transform: scaleY(1);
+        }
+        50% {
+          transform: scaleY(1.8);
+        }
+      }
+      /* Loader 4: Glowing Ring */
+      .glow-ring {
+        width: 50px;
+        height: 50px;
+        border: 4px solid transparent;
+        border-radius: 50%;
+        border-top: 4px solid #fff;
+        box-shadow: 0 0 10px #fff;
+        animation: glow-spin 1s linear infinite;
+      }
+      @keyframes glow-spin {
+        0% {
+          transform: rotate(0deg);
+          opacity: 0.8;
+        }
+        100% {
+          transform: rotate(360deg);
+          opacity: 1;
+        }
+      }
+      /* Loader 5: Flip Cube */
+      .flip-cube {
+        width: 40px;
+        height: 40px;
+        background: #fff;
+        animation: flip 1.2s infinite ease-in-out;
+      }
+      @keyframes flip {
+        0%,
+        100% {
+          transform: perspective(100px) rotateX(0) rotateY(0);
+        }
+        50% {
+          transform: perspective(100px) rotateX(180deg) rotateY(180deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Amazing Loaders</h1>
+    <div class="container">
+      <div class="loader spinner"></div>
+      <div class="loader dot-pulse">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="loader wave">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="loader glow-ring"></div>
+      <div class="loader flip-cube"></div>
+    </div>
+  </body>
+</html>
