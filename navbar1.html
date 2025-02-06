@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animated Icon Navbar</title>
+    <script
+      src="https://kit.fontawesome.com/1ca214b935.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #1e1e1e;
+      }
+      .navbar {
+        display: flex;
+        gap: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px 30px;
+        border-radius: 50px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+      }
+      .nav-item {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+      }
+      .nav-item i {
+        font-size: 24px;
+        color: white;
+        transition: transform 0.3s ease;
+      }
+      .nav-item:hover {
+        transform: scale(1.2);
+        box-shadow: 0 5px 15px rgba(255, 251, 0, 0.5);
+      }
+      .nav-item:hover i {
+        transform: rotateY(360deg);
+      }
+      .title {
+        color: white;
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body class="body">
+    <h1 class="title">Animated Icon Navbar</h1>
+    <div class="navbar">
+      <div class="nav-item"><i class="fas fa-home"></i></div>
+      <div class="nav-item"><i class="fas fa-user"></i></div>
+      <div class="nav-item"><i class="fas fa-blog"></i></div>
+      <div class="nav-item"><i class="fas fa-envelope"></i></div>
+      <div class="nav-item"><i class="fas fa-sign-in-alt"></i></div>
+    </div>
+  </body>
+</html>
