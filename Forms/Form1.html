@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Fun Form</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        font-family: Arial, sans-serif;
+      }
+      .form-container {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 50px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        width: 300px;
+        text-align: center;
+        position: relative;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        background: rgba(255, 255, 255, 0.3);
+        transition: 0.3s;
+      }
+      input:focus {
+        background: rgba(255, 255, 255, 0.5);
+      }
+      .password-strength {
+        text-align: left;
+        font-size: 12px;
+        color: white;
+      }
+      .register-btn {
+        width: 50%;
+
+        padding: 10px;
+        background: #ff4b5c;
+        border: none;
+        color: white;
+        font-weight: bold;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: 0.3s;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .register-btn:hover {
+        background: #ff1e3c;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h2 style="color: white">Register</h2>
+      <input type="email" id="email" placeholder="Enter your email" />
+      <input type="password" id="password" placeholder="Enter your password" />
+      <div class="password-strength" id="strength">Weak</div>
+      <button class="register-btn" id="register">Register</button>
+    </div>
+
+    <script>
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const registerBtn = document.getElementById("register");
+      const strengthIndicator = document.getElementById("strength");
+
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      function checkPasswordStrength(password) {
+        if (password.length < 6) return "Weak";
+        if (
+          password.match(/[A-Z]/) &&
+          password.match(/[0-9]/) &&
+          password.match(/[@$!%*?&]/)
+        )
+          return "Strong";
+        return "Medium";
+      }
+
+      function moveButton() {
+        let validEmail = isValidEmail(emailInput.value);
+        let passwordStrength = checkPasswordStrength(passwordInput.value);
+
+        if (!validEmail || passwordStrength === "Weak") {
+          let randomX = Math.floor(Math.random() * 200) - 100;
+          let randomY = Math.floor(Math.random() * 200) - 100;
+          registerBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        } else {
+          registerBtn.style.transform = "translateX(-50%) ";
+        }
+      }
+
+      moveButton();
+
+      registerBtn.addEventListener("mouseover", moveButton);
+    </script>
+  </body>
+</html>
