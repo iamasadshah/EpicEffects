@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Checkboxes</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #121212;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+      .checkbox-container {
+        display: flex;
+        gap: 20px;
+      }
+      label {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background: #222;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+        border: 2px solid white;
+      }
+      input {
+        display: none;
+      }
+      span {
+        font-size: 24px;
+        transition: 0.3s;
+      }
+      label:has(input:checked) {
+        background: white;
+        color: black;
+      }
+      /* Confetti Checkbox */
+      .confetti-checkbox input:checked + .box {
+        color: black;
+        border-radius: 5px;
+      }
+      /* Heartbeat Checkbox */
+      .heartbeat-checkbox input:checked + .heart {
+        animation: heartbeat 0.8s infinite;
+        color: red;
+      }
+      @keyframes heartbeat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+      }
+
+      /* Light Bulb Checkbox */
+      .lightbulb-checkbox input:checked + .bulb {
+        background: yellow;
+        box-shadow: 0 0 10px yellow;
+        color: black;
+      }
+      /* Sliding Puzzle Checkbox */
+      .puzzle-checkbox input:checked + .piece {
+        animation: slide-in 0.5s ease-out;
+        background: green;
+        border-radius: 10px;
+        color: white;
+      }
+      @keyframes slide-in {
+        0% {
+          transform: translateY(-20px);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="checkbox-container">
+      <label class="confetti-checkbox">
+        <input type="checkbox" id="confetti" />
+        <span class="box">✔</span>
+      </label>
+      <label class="heartbeat-checkbox">
+        <input type="checkbox" id="heartbeat" />
+        <span class="heart">❤</span>
+      </label>
+
+      <label class="lightbulb-checkbox">
+        <input type="checkbox" id="lightbulb" />
+        <span class="bulb">💡</span>
+      </label>
+      <label class="puzzle-checkbox">
+        <input type="checkbox" id="puzzle" />
+        <span class="piece">🧩</span>
+      </label>
+    </div>
+  </body>
+</html>

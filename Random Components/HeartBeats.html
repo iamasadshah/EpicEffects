@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Realistic Heartbeat Animation</title>
+    <style>
+      /* Reset default styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Body styling */
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #1a1a1a;
+        overflow: hidden;
+      }
+
+      /* Container for the ECG line and heart */
+      .container {
+        position: relative;
+        width: 100%;
+        height: 200px;
+      }
+
+      /* ECG Line Styling */
+      .ecg-line {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #ff4757;
+        box-shadow: 0 0 10px #ff4757, 0 0 20px #ff4757;
+        transform-origin: left;
+        animation: ecgMove 4s linear infinite;
+        z-index: 1;
+      }
+
+      /* Heart Styling */
+      .heart {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 40px;
+        height: 40px;
+        background-color: #ff4757;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        box-shadow: 0 0 20px #ff4757, 0 0 40px #ff4757, 0 0 60px #ff4757;
+        opacity: 0;
+        z-index: 2;
+      }
+
+      /* Heart shape using pseudo-elements */
+      .heart::before,
+      .heart::after {
+        content: "";
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background-color: #ff4757;
+        border-radius: 50%;
+      }
+
+      .heart::before {
+        top: -20px;
+        left: 0;
+      }
+
+      .heart::after {
+        top: 0;
+        left: 20px;
+      }
+
+      /* Keyframes for ECG Line Movement */
+      @keyframes ecgMove {
+        0% {
+          transform: scaleX(0);
+        }
+        25% {
+          transform: scaleX(1) translateY(-20px);
+        }
+        50% {
+          transform: scaleX(1) translateY(0);
+        }
+        75% {
+          transform: scaleX(1) translateY(10px);
+        }
+        100% {
+          transform: scaleX(1) translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="ecg-line"></div>
+      <div class="heart"></div>
+    </div>
+
+    <script>
+      // JavaScript to control the heart pulse
+      const heart = document.querySelector(".heart");
+
+      // Function to make the heart pulse
+      function pulseHeart() {
+        heart.style.opacity = "1";
+        heart.style.transform =
+          "translate(-50%, -50%) rotate(-45deg) scale(1.2)";
+        setTimeout(() => {
+          heart.style.opacity = "0";
+          heart.style.transform =
+            "translate(-50%, -50%) rotate(-45deg) scale(1)";
+        }, 300);
+      }
+
+      // Trigger the heart pulse at the right time
+      setInterval(pulseHeart, 2000); // Adjust timing to sync with ECG animation
+    </script>
+  </body>
+</html>
