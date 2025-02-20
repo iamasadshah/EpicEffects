@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Futuristic Interactive Menu</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #0f0f0f, #1a1a2e);
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+      }
+      .menu-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+      .menu-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+        overflow: hidden;
+      }
+      .menu-item::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 0, 150, 0.5),
+          rgba(0, 255, 255, 0.5)
+        );
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease-in-out;
+      }
+      .menu-item:hover::before {
+        transform: scaleX(1);
+      }
+      .menu-item:hover {
+        transform: scale(1.1);
+        box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+      }
+      .floating-particles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .particle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        animation: float 5s infinite ease-in-out;
+      }
+      @keyframes float {
+        0% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        50% {
+          transform: translateY(-20px);
+          opacity: 0.5;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="menu-container">
+      <div class="menu-item">Home</div>
+      <div class="menu-item">About</div>
+      <div class="menu-item">Services</div>
+      <div class="menu-item">Portfolio</div>
+      <div class="menu-item">Contact</div>
+    </div>
+    <div class="floating-particles"></div>
+    <script>
+      function createParticles() {
+        const container = document.querySelector(".floating-particles");
+        for (let i = 0; i < 20; i++) {
+          let particle = document.createElement("div");
+          particle.classList.add("particle");
+          particle.style.left = `${Math.random() * 100}%`;
+          particle.style.top = `${Math.random() * 100}%`;
+          particle.style.animationDuration = `${3 + Math.random() * 2}s`;
+          container.appendChild(particle);
+        }
+      }
+      createParticles();
+    </script>
+  </body>
+</html>
