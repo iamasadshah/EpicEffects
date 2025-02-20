@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Futuristic Interactive Menu</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: radial-gradient(circle, #0f0f0f, #050505);
+        color: white;
+        font-family: "Arial", sans-serif;
+        overflow: hidden;
+        perspective: 1000px;
+      }
+      .menu {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        transform-style: preserve-3d;
+        transition: transform 0.3s ease-out;
+      }
+      .menu-item {
+        position: relative;
+        padding: 15px 40px;
+        font-size: 24px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: 0.4s;
+      }
+      .menu-item:hover {
+        background: rgba(0, 255, 255, 0.2);
+        box-shadow: 0 0 15px cyan;
+      }
+      .menu-item::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(0, 255, 255, 0.5);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s;
+      }
+      .menu-item:hover::after {
+        width: 200px;
+        height: 200px;
+        opacity: 0;
+      }
+      .menu-item.active {
+        background: rgba(0, 255, 255, 0.3);
+        box-shadow: 0 0 20px cyan;
+        transition: box-shadow 0.5s;
+      }
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="menu">
+      <div class="menu-item">Home</div>
+      <div class="menu-item">About</div>
+      <div class="menu-item">Services</div>
+      <div class="menu-item">Portfolio</div>
+      <div class="menu-item">Contact</div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const menuItems = document.querySelectorAll(".menu-item");
+        menuItems.forEach((item, index) => {
+          item.style.animation = `fadeIn 0.5s ease ${index * 0.1}s both`;
+          item.addEventListener("mouseover", (e) => {
+            const rect = item.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            item.style.transform = `rotateY(${
+              (x - rect.width / 2) / 10
+            }deg) rotateX(${-(y - rect.height / 2) / 10}deg)`;
+          });
+          item.addEventListener("mouseleave", () => {
+            item.style.transform = "rotateY(0) rotateX(0)";
+          });
+          item.addEventListener("click", () => {
+            menuItems.forEach((i) => i.classList.remove("active"));
+            item.classList.add("active");
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
