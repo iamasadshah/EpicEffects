@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hacker Access Terminal</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Orbitron&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Orbitron", sans-serif;
+      }
+
+      body {
+        background: black;
+        color: #0f0;
+        text-align: center;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .terminal {
+        width: 600px;
+        background: rgba(0, 0, 0, 0.9);
+        padding: 20px;
+        border: 2px solid #0f0;
+        box-shadow: 0 0 15px #0f0;
+        text-align: left;
+        position: relative;
+      }
+
+      .terminal::before {
+        content: "ACCESS PANEL";
+        position: absolute;
+        top: -20px;
+        left: 10px;
+        font-size: 14px;
+        color: #0f0;
+      }
+
+      .log {
+        height: 200px;
+        overflow-y: auto;
+        font-size: 16px;
+        line-height: 1.5;
+        white-space: pre-line;
+        color: #0f0;
+      }
+
+      input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        color: #0f0;
+        font-size: 18px;
+        outline: none;
+        caret-color: #0f0;
+      }
+
+      .error {
+        color: red;
+        text-shadow: 0 0 5px red;
+        display: none;
+      }
+
+      .access-granted {
+        color: #0f0;
+        text-shadow: 0 0 5px #0f0;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="terminal">
+      <div class="log" id="log">
+        Initializing secure connection... Verifying encryption protocols...
+        SYSTEM ONLINE. Awaiting user authentication...
+      </div>
+      <input
+        type="text"
+        id="command"
+        placeholder="Enter command..."
+        autofocus
+      />
+      <p class="error" id="error-message">FIREWALL ALERT! ACCESS DENIED.</p>
+      <p class="access-granted" id="access-message">
+        ACCESS GRANTED. Welcome, Agent.
+      </p>
+    </div>
+
+    <script>
+      let log = document.getElementById("log");
+      let input = document.getElementById("command");
+      let errorMessage = document.getElementById("error-message");
+      let accessMessage = document.getElementById("access-message");
+
+      function appendLog(message) {
+        log.innerHTML += "\n" + message;
+        log.scrollTop = log.scrollHeight;
+      }
+
+      input.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+          let command = input.value.trim().toUpperCase();
+          input.value = "";
+
+          if (command === "ACCESS GRANTED") {
+            errorMessage.style.display = "none";
+            accessMessage.style.display = "block";
+            appendLog("> ACCESS GRANTED. Welcome, Agent.");
+            setTimeout(() => {
+              document.body.innerHTML =
+                '<h1 style="color:#0f0;">MISSION LOADING...</h1>';
+            }, 3000);
+          } else if (command === "SUDO ROOT") {
+            appendLog("> ADMIN OVERRIDE DETECTED. ROOT ACCESS GRANTED.");
+            document.body.style.background = "red";
+            setTimeout(() => {
+              document.body.style.background = "black";
+            }, 2000);
+          } else {
+            errorMessage.style.display = "block";
+            appendLog("> ERROR: FIREWALL ACTIVATED!");
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
