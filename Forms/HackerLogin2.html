@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hacker Login Terminal</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Share Tech Mono", monospace;
+      }
+
+      body {
+        color: #0f0;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .container {
+        text-align: center;
+        border: 2px solid #0f0;
+        padding: 30px;
+        box-shadow: 0 0 20px #0f0, 0 0 40px #00ff00;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(5px);
+        width: 400px;
+        border-radius: 10px;
+        animation: flicker 1.5s infinite alternate;
+      }
+
+      h1 {
+        text-shadow: 0 0 10px #0f0, 0 0 20px #00ff00;
+        font-size: 26px;
+        margin-bottom: 20px;
+      }
+
+      .input-field {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        background: transparent;
+        border: 2px solid #0f0;
+        border-radius: 12px;
+        color: #0f0;
+        font-size: 18px;
+        outline: none;
+        text-align: center;
+        transition: 0.3s ease-in-out;
+      }
+
+      .input-field:focus {
+        box-shadow: 0 0 12px #0f0, 0 0 24px #00ff00;
+        animation: glitch 0.2s infinite alternate;
+      }
+
+      .login-btn {
+        background: black;
+        color: #0f0;
+        padding: 12px 20px;
+        border: 2px solid #0f0;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .login-btn:hover {
+        box-shadow: 0 0 15px #0f0, 0 0 30px #00ff00;
+        background: #0f0;
+        color: black;
+      }
+
+      @keyframes glitch {
+        0% {
+          transform: skewX(5deg);
+        }
+        50% {
+          transform: skewX(-5deg);
+        }
+        100% {
+          transform: skewX(5deg);
+        }
+      }
+
+      @keyframes flicker {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.9;
+        }
+      }
+
+      .output {
+        height: 120px;
+        overflow-y: auto;
+        white-space: pre-line;
+        font-size: 16px;
+        margin-top: 19px;
+        text-align: left;
+        padding: 10px;
+        border: 1px solid #0f0;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.8);
+        box-shadow: 0 0 10px #0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>HACKER ACCESS TERMINAL</h1>
+      <input
+        type="text"
+        class="input-field"
+        id="username"
+        placeholder="Username"
+      />
+      <input
+        type="password"
+        class="input-field"
+        id="password"
+        placeholder="Password"
+      />
+      <button class="login-btn" onclick="login()">LOGIN</button>
+      <div class="output" id="output"></div>
+    </div>
+
+    <script>
+      function login() {
+        let output = document.getElementById("output");
+        output.innerHTML = "Accessing Secure Server...\n";
+
+        setTimeout(() => {
+          output.innerHTML += "Decrypting Password...\n";
+        }, 1000);
+
+        setTimeout(() => {
+          output.innerHTML += "Bypassing Firewalls...\n";
+        }, 2000);
+
+        setTimeout(() => {
+          let username = document.getElementById("username").value;
+          let password = document.getElementById("password").value;
+
+          if (username === "TechRafi" && password === "access") {
+            output.innerHTML += "ACCESS GRANTED ✅";
+            document.body.style.background = "green";
+          } else {
+            output.innerHTML += "INTRUSION DETECTED! 🚨";
+            document.body.style.background = "red";
+            setTimeout(() => {
+              document.body.style.background = "black";
+            }, 2000);
+          }
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>
