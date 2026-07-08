@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern FAQ Accordion</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+:root{
+
+--bg:#09090b;
+--card:#111114;
+--border:rgba(255,255,255,.08);
+--text:#ffffff;
+--muted:#9ca3af;
+--accent:#6d5dfc;
+--accent2:#00d4ff;
+
+}
+
+body{
+
+font-family:Inter,sans-serif;
+background:var(--bg);
+color:var(--text);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:70px 20px;
+overflow-x:hidden;
+
+}
+
+/* Background Glow */
+
+body::before{
+
+content:"";
+position:fixed;
+inset:0;
+background:
+radial-gradient(circle at 20% 20%,rgba(109,93,252,.18),transparent 35%),
+radial-gradient(circle at 80% 80%,rgba(0,212,255,.15),transparent 35%);
+pointer-events:none;
+
+}
+
+.container{
+
+width:min(820px,100%);
+z-index:2;
+
+}
+
+h1{
+
+font-size:42px;
+text-align:center;
+margin-bottom:12px;
+
+}
+
+.subtitle{
+
+text-align:center;
+color:var(--muted);
+margin-bottom:50px;
+font-size:17px;
+
+}
+
+/* FAQ */
+
+.faq{
+
+display:flex;
+flex-direction:column;
+gap:18px;
+
+}
+
+.item{
+
+background:rgba(255,255,255,.03);
+backdrop-filter:blur(18px);
+border:1px solid var(--border);
+
+border-radius:20px;
+
+overflow:hidden;
+
+transition:.35s ease;
+
+position:relative;
+
+}
+
+.item::before{
+
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:20px;
+background:linear-gradient(130deg,
+rgba(109,93,252,.45),
+rgba(0,212,255,.45));
+
+-webkit-mask:
+linear-gradient(#000 0 0) content-box,
+linear-gradient(#000 0 0);
+
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+
+opacity:0;
+transition:.35s;
+
+}
+
+.item:hover{
+
+transform:translateY(-3px);
+
+box-shadow:
+0 20px 40px rgba(0,0,0,.35);
+
+}
+
+.item:hover::before{
+
+opacity:1;
+
+}
+
+.question{
+
+padding:24px 28px;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+cursor:pointer;
+
+user-select:none;
+
+}
+
+.question h3{
+
+font-size:18px;
+font-weight:600;
+
+}
+
+.icon{
+
+width:34px;
+height:34px;
+
+border-radius:50%;
+
+display:grid;
+place-items:center;
+
+background:rgba(255,255,255,.05);
+
+transition:.35s;
+
+flex-shrink:0;
+
+}
+
+.icon svg{
+
+width:18px;
+height:18px;
+stroke:white;
+stroke-width:2;
+fill:none;
+
+transition:.35s;
+
+}
+
+.answer{
+
+max-height:0;
+
+overflow:hidden;
+
+transition:max-height .45s ease;
+
+}
+
+.answer p{
+
+padding:0 28px 28px;
+
+color:var(--muted);
+
+line-height:1.8;
+
+font-size:15px;
+
+}
+
+/* Active */
+
+.item.active{
+
+background:rgba(255,255,255,.05);
+
+}
+
+.item.active .answer{
+
+max-height:300px;
+
+}
+
+.item.active .icon{
+
+background:linear-gradient(135deg,var(--accent),var(--accent2));
+
+transform:rotate(180deg);
+
+box-shadow:
+0 10px 25px rgba(109,93,252,.35);
+
+}
+
+.item.active svg{
+
+transform:rotate(45deg);
+
+}
+
+@media(max-width:700px){
+
+h1{
+
+font-size:32px;
+
+}
+
+.question{
+
+padding:20px;
+
+}
+
+.answer p{
+
+padding:0 20px 20px;
+
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Frequently Asked Questions</h1>
+
+<p class="subtitle">
+Everything you need to know about our platform.
+</p>
+
+<div class="faq">
+
+<div class="item active">
+
+<div class="question">
+
+<h3>What is your platform about?</h3>
+
+<div class="icon">
+
+<svg viewBox="0 0 24 24">
+<path d="M12 5v14M5 12h14"/>
+</svg>
+
+</div>
+
+</div>
+
+<div class="answer">
+
+<p>
+Our platform helps creators and developers build beautiful digital experiences with modern UI components, templates, and interactive effects that are easy to integrate into any project.
+</p>
+
+</div>
+
+</div>
+
+<div class="item">
+
+<div class="question">
+
+<h3>Is it mobile responsive?</h3>
+
+<div class="icon">
+
+<svg viewBox="0 0 24 24">
+<path d="M12 5v14M5 12h14"/>
+</svg>
+
+</div>
+
+</div>
+
+<div class="answer">
+
+<p>
+Yes. Every component is designed with responsiveness in mind, ensuring a smooth experience across desktops, tablets, and mobile devices.
+</p>
+
+</div>
+
+</div>
+
+<div class="item">
+
+<div class="question">
+
+<h3>Can I use these components commercially?</h3>
+
+<div class="icon">
+
+<svg viewBox="0 0 24 24">
+<path d="M12 5v14M5 12h14"/>
+</svg>
+
+</div>
+
+</div>
+
+<div class="answer">
+
+<p>
+Absolutely. You can integrate them into personal projects, client work, or commercial products unless a specific license states otherwise.
+</p>
+
+</div>
+
+</div>
+
+<div class="item">
+
+<div class="question">
+
+<h3>Do I need any frameworks?</h3>
+
+<div class="icon">
+
+<svg viewBox="0 0 24 24">
+<path d="M12 5v14M5 12h14"/>
+</svg>
+
+</div>
+
+</div>
+
+<div class="answer">
+
+<p>
+No. Everything is built using pure HTML, CSS, and JavaScript, making the components lightweight, fast, and framework-independent.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const items=document.querySelectorAll(".item");
+
+items.forEach(item=>{
+
+const question=item.querySelector(".question");
+
+question.addEventListener("click",()=>{
+
+items.forEach(i=>{
+
+if(i!==item){
+
+i.classList.remove("active");
+
+}
+
+});
+
+item.classList.toggle("active");
+
+});
+
+});
+
+</script>
+
+</body>
+</html>
