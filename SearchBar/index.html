@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Magic Search Bar</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Inter,sans-serif;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:
+radial-gradient(circle at top left,#1d4ed8 0%,transparent 40%),
+radial-gradient(circle at bottom right,#9333ea 0%,transparent 45%),
+#08090d;
+overflow:hidden;
+}
+
+body::before{
+content:"";
+position:absolute;
+inset:0;
+background-image:
+linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+background-size:40px 40px;
+mask-image:radial-gradient(circle at center,black 30%,transparent 90%);
+pointer-events:none;
+}
+
+.wrapper{
+position:relative;
+width:min(720px,90%);
+}
+
+.search-box{
+
+--x:50%;
+--y:50%;
+
+position:relative;
+border-radius:24px;
+padding:2px;
+overflow:hidden;
+
+background:
+conic-gradient(from 0deg,
+#00f5ff,
+#8b5cf6,
+#ec4899,
+#22c55e,
+#00f5ff);
+
+box-shadow:
+0 0 40px rgba(0,0,0,.45),
+0 30px 60px rgba(0,0,0,.4);
+}
+
+.search-box::before{
+
+content:"";
+
+position:absolute;
+left:var(--x);
+top:var(--y);
+
+width:320px;
+height:320px;
+
+transform:translate(-50%,-50%);
+background:radial-gradient(circle,
+rgba(255,255,255,.35),
+transparent 70%);
+
+opacity:0;
+transition:.35s;
+pointer-events:none;
+}
+
+.search-box:hover::before,
+.search-box:focus-within::before{
+opacity:1;
+}
+
+.inner{
+
+display:flex;
+align-items:center;
+gap:18px;
+
+background:rgba(12,15,25,.78);
+backdrop-filter:blur(22px);
+-webkit-backdrop-filter:blur(22px);
+
+padding:18px 22px;
+border-radius:22px;
+
+border:1px solid rgba(255,255,255,.08);
+
+transition:.4s;
+}
+
+.search-box:focus-within .inner{
+
+transform:translateY(-3px) scale(1.01);
+
+background:rgba(15,18,30,.92);
+
+box-shadow:
+0 20px 50px rgba(0,0,0,.45),
+inset 0 1px rgba(255,255,255,.08);
+}
+
+.icon{
+
+width:54px;
+height:54px;
+border-radius:16px;
+
+display:grid;
+place-items:center;
+
+background:
+linear-gradient(145deg,
+rgba(255,255,255,.12),
+rgba(255,255,255,.03));
+
+transition:.45s;
+
+flex-shrink:0;
+}
+
+.search-box:focus-within .icon{
+
+transform:
+rotate(-10deg)
+scale(1.08);
+
+box-shadow:
+0 0 30px rgba(80,180,255,.45);
+}
+
+svg{
+width:25px;
+fill:white;
+opacity:.9;
+transition:.35s;
+}
+
+input{
+
+flex:1;
+
+background:none;
+border:none;
+outline:none;
+
+color:white;
+font-size:18px;
+
+font-weight:500;
+letter-spacing:.2px;
+}
+
+input::placeholder{
+
+color:#9ca3af;
+transition:.35s;
+}
+
+.search-box:focus-within input::placeholder{
+
+opacity:.45;
+transform:translateX(10px);
+}
+
+.shortcut{
+
+padding:10px 14px;
+
+border-radius:12px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.08);
+
+font-size:14px;
+color:#cbd5e1;
+
+transition:.35s;
+}
+
+.search-box:focus-within .shortcut{
+
+background:#3b82f6;
+
+color:white;
+
+transform:translateX(4px);
+}
+
+@keyframes spin{
+
+to{
+transform:rotate(360deg);
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="wrapper">
+
+<div class="search-box" id="search">
+
+<div class="inner">
+
+<div class="icon">
+
+<svg viewBox="0 0 24 24">
+<path d="M21 20.3l-5.6-5.6a7 7 0 10-.7.7l5.6 5.6a.5.5 0 00.7-.7zM4 10a6 6 0 1112 0A6 6 0 014 10z"/>
+</svg>
+
+</div>
+
+<input
+type="text"
+placeholder="Search anything..."
+>
+
+<div class="shortcut">
+⌘ K
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const box=document.getElementById("search");
+
+box.addEventListener("mousemove",e=>{
+
+const rect=box.getBoundingClientRect();
+
+const x=((e.clientX-rect.left)/rect.width)*100;
+const y=((e.clientY-rect.top)/rect.height)*100;
+
+box.style.setProperty("--x",x+"%");
+box.style.setProperty("--y",y+"%");
+
+});
+
+document.addEventListener("keydown",e=>{
+
+if((e.metaKey || e.ctrlKey) && e.key.toLowerCase()==="k"){
+
+e.preventDefault();
+
+document.querySelector("input").focus();
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
