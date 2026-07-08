@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Modern Button Effects</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+font-family:Inter,sans-serif;
+background:#09090b;
+min-height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+padding:40px;
+
+background:
+radial-gradient(circle at top left,#1d4ed822,transparent 35%),
+radial-gradient(circle at bottom right,#7c3aed22,transparent 35%),
+#09090b;
+
+}
+
+.container{
+
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:30px;
+
+}
+
+/* ----------------------- */
+/* Shared Button Style */
+/* ----------------------- */
+
+button{
+
+cursor:pointer;
+border:none;
+outline:none;
+
+font-size:16px;
+font-weight:600;
+font-family:inherit;
+
+padding:16px 34px;
+
+border-radius:14px;
+
+position:relative;
+
+transition:.35s ease;
+
+overflow:hidden;
+
+}
+
+
+/* ================================================= */
+/* BUTTON 1 - Shine Effect */
+/* ================================================= */
+
+.btn-1{
+
+background:#2563eb;
+color:white;
+
+box-shadow:0 10px 30px rgba(37,99,235,.25);
+
+}
+
+.btn-1::before{
+
+content:"";
+
+position:absolute;
+left:-120%;
+top:0;
+
+width:70%;
+height:100%;
+
+background:linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,.45),
+transparent);
+
+transform:skewX(-25deg);
+
+transition:.8s;
+
+}
+
+.btn-1:hover{
+
+transform:translateY(-4px);
+
+box-shadow:0 18px 35px rgba(37,99,235,.4);
+
+}
+
+.btn-1:hover::before{
+
+left:140%;
+
+}
+
+
+/* ================================================= */
+/* BUTTON 2 - Magnetic Border */
+/* ================================================= */
+
+.btn-2{
+
+background:#121214;
+
+color:white;
+
+border:1px solid rgba(255,255,255,.08);
+
+}
+
+.btn-2::before{
+
+content:"";
+
+position:absolute;
+
+inset:-2px;
+
+border-radius:inherit;
+
+background:linear-gradient(
+135deg,
+#00d4ff,
+#7c3aed,
+#00d4ff);
+
+z-index:-2;
+
+opacity:0;
+
+transition:.35s;
+
+}
+
+.btn-2::after{
+
+content:"";
+
+position:absolute;
+
+inset:1px;
+
+background:#121214;
+
+border-radius:inherit;
+
+z-index:-1;
+
+}
+
+.btn-2:hover{
+
+transform:translateY(-4px) scale(1.02);
+
+}
+
+.btn-2:hover::before{
+
+opacity:1;
+
+filter:blur(4px);
+
+}
+
+
+/* ================================================= */
+/* BUTTON 3 - Fill Animation */
+/* ================================================= */
+
+.btn-3{
+
+background:transparent;
+
+color:white;
+
+border:1px solid rgba(255,255,255,.15);
+
+}
+
+.btn-3 span{
+
+position:relative;
+z-index:2;
+
+}
+
+.btn-3::before{
+
+content:"";
+
+position:absolute;
+
+left:50%;
+top:50%;
+
+width:0;
+height:0;
+
+background:linear-gradient(
+135deg,
+#7c3aed,
+#2563eb);
+
+border-radius:50%;
+
+transform:translate(-50%,-50%);
+
+transition:.45s ease;
+
+z-index:1;
+
+}
+
+.btn-3:hover{
+
+border-color:transparent;
+
+}
+
+.btn-3:hover::before{
+
+width:320px;
+height:320px;
+
+}
+
+@media(max-width:700px){
+
+.container{
+
+flex-direction:column;
+width:100%;
+
+}
+
+button{
+
+width:100%;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<button class="btn-1">
+Shine Button
+</button>
+
+<button class="btn-2">
+Gradient Border
+</button>
+
+<button class="btn-3">
+<span>Fill Effect</span>
+</button>
+
+</div>
+
+</body>
+</html>
