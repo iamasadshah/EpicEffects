@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Luxury Sidebar</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Inter, sans-serif;
+        background: #09090b;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+        color: #fff;
+      }
+
+      /* Sidebar */
+
+      .sidebar {
+        width: 78px;
+        height: 100vh;
+
+        background: #0f0f11;
+        border-right: 1px solid rgba(255, 255, 255, 0.06);
+
+        padding: 18px;
+
+        display: flex;
+        flex-direction: column;
+
+        transition: 0.35s ease;
+
+        overflow: hidden;
+      }
+
+      .sidebar:hover {
+        width: 250px;
+      }
+
+      /* Logo */
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+
+        height: 54px;
+
+        margin-bottom: 28px;
+
+        white-space: nowrap;
+      }
+
+      .logo-icon {
+        width: 42px;
+        height: 42px;
+
+        border-radius: 12px;
+
+        background: #fff;
+        color: #09090b;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-weight: 700;
+        font-size: 18px;
+
+        flex-shrink: 0;
+      }
+
+      .logo-text {
+        font-size: 17px;
+        font-weight: 700;
+
+        opacity: 0;
+        transform: translateX(-8px);
+
+        transition: 0.3s;
+      }
+
+      .sidebar:hover .logo-text {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* Menu */
+
+      .menu {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      /* Item */
+
+      .item {
+        position: relative;
+
+        display: flex;
+        align-items: center;
+
+        gap: 16px;
+
+        height: 50px;
+
+        padding: 0 14px;
+
+        border-radius: 14px;
+
+        cursor: pointer;
+
+        color: #8b8b93;
+
+        transition: 0.25s;
+
+        white-space: nowrap;
+      }
+
+      .item:hover {
+        background: #18181b;
+
+        color: #fff;
+      }
+
+      .item.active {
+        background: #18181b;
+
+        color: #fff;
+      }
+
+      /* Left Line */
+
+      .item::before {
+        content: "";
+
+        position: absolute;
+
+        left: -18px;
+        top: 50%;
+
+        transform: translateY(-50%) scaleY(0);
+
+        width: 3px;
+        height: 24px;
+
+        border-radius: 999px;
+
+        background: #fff;
+
+        transition: 0.25s;
+      }
+
+      .item.active::before {
+        transform: translateY(-50%) scaleY(1);
+      }
+
+      /* Icon */
+
+      .icon {
+        width: 22px;
+        height: 22px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex-shrink: 0;
+      }
+
+      .icon svg {
+        width: 20px;
+        height: 20px;
+
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+
+        transition: 0.25s;
+      }
+
+      .item:hover .icon {
+        transform: translateX(2px);
+      }
+
+      /* Text */
+
+      .text {
+        opacity: 0;
+
+        transform: translateX(-8px);
+
+        transition: 0.3s;
+
+        font-size: 15px;
+        font-weight: 500;
+      }
+
+      .sidebar:hover .text {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* Divider */
+
+      .divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.06);
+
+        margin: 22px 0;
+      }
+
+      /* Profile */
+
+      .profile {
+        margin-top: auto;
+
+        display: flex;
+        align-items: center;
+
+        gap: 14px;
+
+        padding: 12px;
+
+        border-radius: 14px;
+
+        transition: 0.25s;
+
+        cursor: pointer;
+      }
+
+      .profile:hover {
+        background: #18181b;
+      }
+
+      .avatar {
+        width: 42px;
+        height: 42px;
+
+        border-radius: 50%;
+
+        background: #fff;
+
+        color: #09090b;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-weight: 700;
+
+        flex-shrink: 0;
+      }
+
+      .user {
+        opacity: 0;
+
+        transform: translateX(-8px);
+
+        transition: 0.3s;
+
+        white-space: nowrap;
+      }
+
+      .sidebar:hover .user {
+        opacity: 1;
+        transform: none;
+      }
+
+      .user h4 {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .user p {
+        font-size: 13px;
+        color: #8b8b93;
+
+        margin-top: 3px;
+      }
+
+      /* Main */
+
+      main {
+        flex: 1;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        font-size: 42px;
+        font-weight: 700;
+
+        color: #fff;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 72px;
+        }
+
+        .sidebar:hover {
+          width: 220px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">Z</div>
+
+        <div class="logo-text">ZORIQ</div>
+      </div>
+
+      <div class="menu">
+        <div class="item active">
+          <div class="icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 10.5L12 3l9 7.5" />
+              <path d="M5 9.5V21h14V9.5" />
+            </svg>
+          </div>
+
+          <div class="text">Dashboard</div>
+        </div>
+
+        <div class="item">
+          <div class="icon">
+            <svg viewBox="0 0 24 24">
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="14" y="14" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+            </svg>
+          </div>
+
+          <div class="text">Projects</div>
+        </div>
+
+        <div class="item">
+          <div class="icon">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+              />
+            </svg>
+          </div>
+
+          <div class="text">Messages</div>
+        </div>
+
+        <div class="item">
+          <div class="icon">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9A1.7 1.7 0 0 0 10 3.2V3a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9c0 .7.4 1.3 1.1 1.5h.2a2 2 0 1 1 0 4h-.2c-.7.2-1.1.8-1.1 1.5z"
+              />
+            </svg>
+          </div>
+
+          <div class="text">Settings</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="profile">
+        <div class="avatar">A</div>
+
+        <div class="user">
+          <h4>Asad Shah</h4>
+
+          <p>Premium Member</p>
+        </div>
+      </div>
+    </aside>
+
+    <main>Luxury Sidebar</main>
+
+    <script>
+      document.querySelectorAll(".item").forEach((item) => {
+        item.onclick = () => {
+          document.querySelector(".active").classList.remove("active");
+          item.classList.add("active");
+        };
+      });
+    </script>
+  </body>
+</html>
