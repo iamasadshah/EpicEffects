@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>I Love You Effect</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+font-family:Inter,sans-serif;
+height:100vh;
+overflow:hidden;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+background:
+radial-gradient(circle at top left,#ff4d6d33,transparent 35%),
+radial-gradient(circle at bottom right,#7c3aed33,transparent 35%),
+#09090b;
+
+}
+
+/* Floating Hearts */
+
+.heart{
+
+position:absolute;
+
+font-size:18px;
+
+opacity:.15;
+
+animation:float linear infinite;
+
+user-select:none;
+
+}
+
+@keyframes float{
+
+from{
+
+transform:translateY(110vh) scale(.5);
+
+}
+
+to{
+
+transform:translateY(-120vh) scale(1.2);
+
+}
+
+}
+
+/* Main Card */
+
+.card{
+
+position:relative;
+
+padding:60px;
+
+width:min(650px,92vw);
+
+border-radius:30px;
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+overflow:hidden;
+
+text-align:center;
+
+transition:.45s;
+
+cursor:pointer;
+
+box-shadow:
+0 20px 60px rgba(0,0,0,.35);
+
+}
+
+.card:hover{
+
+transform:translateY(-8px);
+
+}
+
+/* Aurora Border */
+
+.card::before{
+
+content:"";
+
+position:absolute;
+
+inset:-2px;
+
+background:linear-gradient(
+120deg,
+#ff4d6d,
+#ff9a8b,
+#7c3aed,
+#ff4d6d);
+
+background-size:300%;
+
+border-radius:inherit;
+
+filter:blur(18px);
+
+opacity:0;
+
+transition:.45s;
+
+animation:borderMove 6s linear infinite;
+
+z-index:-2;
+
+}
+
+.card:hover::before{
+
+opacity:.9;
+
+}
+
+@keyframes borderMove{
+
+0%{background-position:0%;}
+100%{background-position:300%;}
+
+}
+
+/* Mouse Glow */
+
+.glow{
+
+position:absolute;
+
+width:260px;
+height:260px;
+
+border-radius:50%;
+
+background:radial-gradient(circle,
+rgba(255,255,255,.28),
+transparent 70%);
+
+left:50%;
+top:50%;
+
+transform:translate(-50%,-50%);
+
+pointer-events:none;
+
+opacity:0;
+
+transition:.3s;
+
+}
+
+.card:hover .glow{
+
+opacity:1;
+
+}
+
+/* Heart */
+
+.bigHeart{
+
+font-size:74px;
+
+display:inline-block;
+
+animation:beat 1.8s infinite;
+
+filter:drop-shadow(0 0 20px rgba(255,90,120,.5));
+
+}
+
+@keyframes beat{
+
+0%,100%{
+
+transform:scale(1);
+
+}
+
+20%{
+
+transform:scale(1.18);
+
+}
+
+40%{
+
+transform:scale(.95);
+
+}
+
+60%{
+
+transform:scale(1.1);
+
+}
+
+}
+
+/* Text */
+
+h1{
+
+margin-top:18px;
+
+font-size:58px;
+
+font-weight:800;
+
+letter-spacing:3px;
+
+background:linear-gradient(
+90deg,
+#ffffff,
+#ffd6df,
+#ffffff);
+
+-webkit-background-clip:text;
+color:transparent;
+
+}
+
+p{
+
+margin-top:18px;
+
+font-size:17px;
+
+line-height:1.8;
+
+color:#b9bcc8;
+
+}
+
+/* Button */
+
+button{
+
+margin-top:34px;
+
+padding:15px 30px;
+
+border:none;
+
+border-radius:50px;
+
+background:linear-gradient(
+135deg,
+#ff4d6d,
+#ff758f);
+
+color:white;
+
+font-size:16px;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:.35s;
+
+}
+
+button:hover{
+
+transform:translateY(-3px) scale(1.05);
+
+box-shadow:
+0 15px 35px rgba(255,77,109,.45);
+
+}
+
+/* Sparkles */
+
+.spark{
+
+position:absolute;
+
+width:6px;
+height:6px;
+
+background:white;
+
+border-radius:50%;
+
+opacity:0;
+
+pointer-events:none;
+
+}
+
+@keyframes sparkle{
+
+0%{
+
+transform:translate(0,0) scale(0);
+
+opacity:1;
+
+}
+
+100%{
+
+transform:translate(var(--x),var(--y)) scale(1.8);
+
+opacity:0;
+
+}
+
+}
+
+@media(max-width:600px){
+
+.card{
+
+padding:40px 25px;
+
+}
+
+.bigHeart{
+
+font-size:58px;
+
+}
+
+h1{
+
+font-size:40px;
+
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<script>
+
+/* Floating Background Hearts */
+
+for(let i=0;i<24;i++){
+
+const h=document.createElement("div");
+
+h.className="heart";
+
+h.innerHTML="❤";
+
+h.style.left=Math.random()*100+"vw";
+
+h.style.animationDuration=(8+Math.random()*8)+"s";
+
+h.style.animationDelay=(-Math.random()*12)+"s";
+
+h.style.fontSize=(12+Math.random()*18)+"px";
+
+document.body.appendChild(h);
+
+}
+
+</script>
+
+<div class="card" id="card">
+
+<div class="glow" id="glow"></div>
+
+<div class="bigHeart">❤</div>
+
+<h1>I LOVE YOU</h1>
+
+<p>
+Not because you're perfect,<br>
+but because every moment with you feels a little more beautiful.
+</p>
+
+<button id="btn">
+❤️ Send Love
+</button>
+
+</div>
+
+<script>
+
+const card=document.getElementById("card");
+const glow=document.getElementById("glow");
+const btn=document.getElementById("btn");
+
+card.addEventListener("mousemove",(e)=>{
+
+const r=card.getBoundingClientRect();
+
+glow.style.left=(e.clientX-r.left)+"px";
+glow.style.top=(e.clientY-r.top)+"px";
+
+});
+
+btn.addEventListener("click",()=>{
+
+for(let i=0;i<28;i++){
+
+const s=document.createElement("div");
+
+s.className="spark";
+
+s.innerHTML=Math.random()>.5?"❤":"✨";
+
+s.style.left="50%";
+s.style.top="72%";
+
+s.style.position="absolute";
+
+s.style.fontSize=(12+Math.random()*18)+"px";
+
+s.style.setProperty("--x",(Math.random()*340-170)+"px");
+s.style.setProperty("--y",(-120-Math.random()*180)+"px");
+
+s.style.animation="sparkle 1200ms ease-out forwards";
+
+card.appendChild(s);
+
+setTimeout(()=>s.remove(),1200);
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
