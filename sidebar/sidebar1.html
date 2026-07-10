@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Modern Interactive Sidebar</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+font-family:Inter,sans-serif;
+background:#0b0b0f;
+height:100vh;
+overflow:hidden;
+display:flex;
+
+}
+
+/* Background */
+
+body::before{
+
+content:"";
+position:fixed;
+inset:0;
+
+background:
+radial-gradient(circle at top left,#2563eb22,transparent 35%),
+radial-gradient(circle at bottom right,#7c3aed22,transparent 35%);
+
+pointer-events:none;
+
+}
+
+/* Sidebar */
+
+.sidebar{
+
+width:90px;
+height:100vh;
+
+background:rgba(255,255,255,.04);
+backdrop-filter:blur(20px);
+
+border-right:1px solid rgba(255,255,255,.08);
+
+padding:20px 15px;
+
+display:flex;
+flex-direction:column;
+
+transition:.4s ease;
+
+overflow:hidden;
+
+}
+
+.sidebar:hover{
+
+width:260px;
+
+}
+
+/* Logo */
+
+.logo{
+
+height:60px;
+
+display:flex;
+align-items:center;
+
+padding:0 10px;
+
+margin-bottom:25px;
+
+font-size:22px;
+font-weight:700;
+color:white;
+
+white-space:nowrap;
+
+}
+
+.logo span{
+
+margin-left:15px;
+
+opacity:0;
+
+transition:.3s;
+
+}
+
+.sidebar:hover .logo span{
+
+opacity:1;
+
+}
+
+/* Menu */
+
+.menu{
+
+display:flex;
+flex-direction:column;
+gap:10px;
+
+}
+
+/* Item */
+
+.item{
+
+position:relative;
+
+display:flex;
+align-items:center;
+
+padding:15px;
+
+border-radius:16px;
+
+cursor:pointer;
+
+color:#b9bcc8;
+
+transition:.3s;
+
+white-space:nowrap;
+
+overflow:hidden;
+
+}
+
+.item:hover{
+
+background:rgba(255,255,255,.06);
+
+color:white;
+
+transform:translateX(5px);
+
+}
+
+/* Active */
+
+.item.active{
+
+background:linear-gradient(
+90deg,
+#2563eb,
+#7c3aed);
+
+color:white;
+
+box-shadow:
+0 12px 25px rgba(37,99,235,.25);
+
+}
+
+/* Left Indicator */
+
+.item::before{
+
+content:"";
+
+position:absolute;
+
+left:0;
+top:15%;
+
+width:4px;
+height:70%;
+
+background:white;
+
+border-radius:5px;
+
+transform:scaleY(0);
+
+transition:.3s;
+
+}
+
+.item:hover::before,
+.item.active::before{
+
+transform:scaleY(1);
+
+}
+
+/* Icon */
+
+.icon{
+
+width:30px;
+font-size:22px;
+
+display:flex;
+justify-content:center;
+
+}
+
+/* Text */
+
+.text{
+
+margin-left:18px;
+
+opacity:0;
+
+transition:.25s;
+
+}
+
+.sidebar:hover .text{
+
+opacity:1;
+
+}
+
+/* Bottom Profile */
+
+.profile{
+
+margin-top:auto;
+
+padding:15px;
+
+display:flex;
+align-items:center;
+
+border-radius:16px;
+
+background:rgba(255,255,255,.05);
+
+transition:.3s;
+
+cursor:pointer;
+
+}
+
+.profile:hover{
+
+background:rgba(255,255,255,.09);
+
+}
+
+.avatar{
+
+width:42px;
+height:42px;
+
+border-radius:50%;
+
+background:linear-gradient(
+135deg,
+#2563eb,
+#7c3aed);
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+color:white;
+font-weight:700;
+
+flex-shrink:0;
+
+}
+
+.info{
+
+margin-left:15px;
+
+opacity:0;
+
+transition:.25s;
+
+white-space:nowrap;
+
+}
+
+.sidebar:hover .info{
+
+opacity:1;
+
+}
+
+.info h4{
+
+color:white;
+font-size:15px;
+
+}
+
+.info p{
+
+font-size:13px;
+color:#9ca3af;
+
+}
+
+/* Main Content */
+
+.content{
+
+flex:1;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+color:white;
+
+font-size:42px;
+font-weight:700;
+
+}
+
+@media(max-width:700px){
+
+.sidebar{
+
+width:78px;
+
+}
+
+.sidebar:hover{
+
+width:220px;
+
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<div class="logo">
+<span>ZORIQ</span>
+</div>
+
+<div class="menu">
+
+<div class="item active">
+<div class="icon">🏠</div>
+<div class="text">Dashboard</div>
+</div>
+
+<div class="item">
+<div class="icon">📊</div>
+<div class="text">Analytics</div>
+</div>
+
+<div class="item">
+<div class="icon">📁</div>
+<div class="text">Projects</div>
+</div>
+
+<div class="item">
+<div class="icon">💬</div>
+<div class="text">Messages</div>
+</div>
+
+<div class="item">
+<div class="icon">⚙️</div>
+<div class="text">Settings</div>
+</div>
+
+</div>
+
+<div class="profile">
+
+<div class="avatar">
+A
+</div>
+
+<div class="info">
+<h4>Asad Shah</h4>
+<p>Software Engineer</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="content">
+Interactive Sidebar
+</div>
+
+<script>
+
+const items=document.querySelectorAll(".item");
+
+items.forEach(item=>{
+
+item.onclick=()=>{
+
+document.querySelector(".active").classList.remove("active");
+item.classList.add("active");
+
+};
+
+});
+
+</script>
+
+</body>
+</html>
