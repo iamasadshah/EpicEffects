@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Console — Progress Instruments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B1120;
+    --panel: #10192C;
+    --panel-edge: #1D2A42;
+    --ink: #DCE6F5;
+    --ink-dim: #7C8CA8;
+    --cyan: #3FE0C5;
+    --cyan-dim: rgba(63,224,197,0.14);
+    --amber: #F5A623;
+    --amber-dim: rgba(245,166,35,0.14);
+    --coral: #FF6B6B;
+    --coral-dim: rgba(255,107,107,0.14);
+    --grid-line: rgba(124,140,168,0.08);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height:100vh;
+  }
+
+  body{
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    padding: 64px 24px 100px;
+  }
+
+  .wrap{
+    max-width: 980px;
+    margin: 0 auto;
+  }
+
+  header.page{
+    margin-bottom: 56px;
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+    border-bottom: 1px solid var(--panel-edge);
+    padding-bottom: 28px;
+  }
+
+  .eyebrow{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+
+  h1{
+    margin: 0;
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .clock{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-dim);
+    text-align: right;
+  }
+  .clock span{ color: var(--ink); }
+
+  .panel{
+    background: var(--panel);
+    border: 1px solid var(--panel-edge);
+    border-radius: 14px;
+    padding: 32px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .panel::before{
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0.5;
+  }
+
+  .panel-head{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 26px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .panel-title{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+  }
+
+  .panel-title .idx{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--bg);
+    background: var(--cyan);
+    width: 26px; height:26px;
+    border-radius: 6px;
+    display:flex; align-items:center; justify-content:center;
+    font-weight: 700;
+  }
+
+  .panel-title h2{
+    margin:0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .panel-title p{
+    margin: 2px 0 0;
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .readout{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--cyan);
+    min-width: 90px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .readout small{
+    font-size: 13px;
+    color: var(--ink-dim);
+    font-weight: 400;
+  }
+
+  /* ---------- Controls ---------- */
+  .controls{
+    display:flex;
+    gap: 10px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+
+  button{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    background: transparent;
+    border: 1px solid var(--panel-edge);
+    color: var(--ink);
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color .18s ease, color .18s ease, background .18s ease, transform .12s ease;
+  }
+  button:hover{
+    border-color: var(--cyan);
+    color: var(--cyan);
+    background: var(--cyan-dim);
+  }
+  button:active{ transform: scale(0.96); }
+  button:focus-visible{
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+  }
+  button.primary{
+    border-color: var(--cyan);
+    color: var(--bg);
+    background: var(--cyan);
+  }
+  button.primary:hover{ background:#5CEBD3; color: var(--bg); }
+
+  /* =========================================================
+     1) LINEAR THROUGHPUT BAR
+     ========================================================= */
+  .track{
+    position: relative;
+    height: 22px;
+    background: #0A1220;
+    border: 1px solid var(--panel-edge);
+    border-radius: 999px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.5);
+  }
+
+  .track .ticks{
+    position:absolute;
+    inset:0;
+    display:flex;
+    justify-content: space-between;
+    padding: 0 2px;
+    z-index: 2;
+    pointer-events:none;
+  }
+  .track .ticks i{
+    width:1px;
+    background: rgba(0,0,0,0.35);
+    height:100%;
+  }
+
+  .fill{
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #1FA98F, var(--cyan));
+    position: relative;
+    transition: width .55s cubic-bezier(.16,1,.3,1);
+    box-shadow: 0 0 18px rgba(63,224,197,0.45);
+  }
+
+  .fill.state-warn{ background: linear-gradient(90deg, #C97A16, var(--amber)); box-shadow: 0 0 18px rgba(245,166,35,0.45); }
+  .fill.state-crit{ background: linear-gradient(90deg, #C13F3F, var(--coral)); box-shadow: 0 0 18px rgba(255,107,107,0.45); }
+
+  .fill::after{
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.35) 40%, transparent 60%);
+    background-size: 220% 100%;
+    animation: sweep 2.2s linear infinite;
+  }
+
+  @keyframes sweep{
+    0%{ background-position: 120% 0; }
+    100%{ background-position: -120% 0; }
+  }
+
+  .track-meta{
+    display:flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-dim);
+  }
+
+  /* =========================================================
+     2) CIRCULAR DIAL
+     ========================================================= */
+  .dial-row{
+    display:flex;
+    align-items:center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .dial{
+    position: relative;
+    width: 170px;
+    height: 170px;
+    flex-shrink: 0;
+    cursor: pointer;
+    touch-action: none;
+  }
+
+  .dial svg{ transform: rotate(-90deg); }
+
+  .dial .bg-ring{
+    fill:none;
+    stroke: #0A1220;
+    stroke-width: 14;
+  }
+  .dial .prog-ring{
+    fill:none;
+    stroke: url(#dialGradient);
+    stroke-width: 14;
+    stroke-linecap: round;
+    transition: stroke-dashoffset .5s cubic-bezier(.16,1,.3,1);
+    filter: drop-shadow(0 0 8px rgba(63,224,197,0.55));
+  }
+
+  .dial-center{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+  }
+  .dial-center .val{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .dial-center .lbl{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--ink-dim);
+    margin-top: 4px;
+  }
+
+  .dial-info{ flex: 1; min-width: 220px; }
+  .dial-info p{
+    color: var(--ink-dim);
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin: 0 0 18px;
+  }
+  .hint{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--amber);
+    display:flex;
+    align-items:center;
+    gap: 8px;
+  }
+  .hint::before{
+    content:'';
+    width:6px; height:6px;
+    border-radius:50%;
+    background: var(--amber);
+    box-shadow: 0 0 8px var(--amber);
+  }
+
+  /* =========================================================
+     3) SEGMENTED STAGE PROGRESS
+     ========================================================= */
+  .stages{
+    display:flex;
+    align-items:flex-start;
+    justify-content: space-between;
+    position: relative;
+    margin: 10px 0 4px;
+  }
+
+  .stage{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap: 12px;
+    flex:1;
+    position:relative;
+    cursor:pointer;
+    z-index: 2;
+    background: transparent;
+    border:none;
+    color: inherit;
+    padding: 0;
+    font-family: inherit;
+  }
+
+  .stage-node{
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #0A1220;
+    border: 2px solid var(--panel-edge);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-dim);
+    transition: all .3s ease;
+  }
+
+  .stage.done .stage-node{
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: var(--bg);
+    box-shadow: 0 0 14px rgba(63,224,197,0.5);
+  }
+
+  .stage.active .stage-node{
+    border-color: var(--amber);
+    color: var(--amber);
+    box-shadow: 0 0 0 4px var(--amber-dim);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes pulse{
+    0%, 100%{ box-shadow: 0 0 0 4px var(--amber-dim); }
+    50%{ box-shadow: 0 0 0 8px transparent; }
+  }
+
+  .stage-label{
+    font-size: 12px;
+    color: var(--ink-dim);
+    text-align:center;
+    transition: color .3s ease;
+    max-width: 100px;
+  }
+  .stage.done .stage-label,
+  .stage.active .stage-label{ color: var(--ink); }
+
+  .stage-line{
+    position:absolute;
+    top: 17px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--panel-edge);
+    z-index: 1;
+  }
+  .stage:last-child .stage-line{ display:none; }
+  .stage-line-fill{
+    position:absolute;
+    inset:0;
+    background: var(--cyan);
+    width: 0%;
+    transition: width .5s ease;
+  }
+  .stage.done .stage-line-fill{ width: 100%; }
+
+  button:focus-visible, .dial:focus-visible{ outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+  footer.page{
+    text-align:center;
+    color: var(--ink-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    margin-top: 40px;
+    letter-spacing: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .fill::after, .stage.active .stage-node{ animation: none; }
+    .fill, .prog-ring{ transition: none; }
+  }
+
+  @media (max-width: 560px){
+    .panel{ padding: 22px; }
+    h1{ font-size: 26px; }
+    .dial-row{ flex-direction: column; }
+    .readout{ font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="page">
+    <div>
+      <p class="eyebrow">// instrument panel</p>
+      <h1>Progress Console</h1>
+    </div>
+    <div class="clock">STATUS <span id="sysStatus">NOMINAL</span><br>UPTIME <span id="uptime">00:00:00</span></div>
+  </header>
+
+  <!-- 1. LINEAR THROUGHPUT -->
+  <section class="panel">
+    <div class="panel-head">
+      <div class="panel-title">
+        <div class="idx">01</div>
+        <div>
+          <h2>Data Throughput</h2>
+          <p>transfer.upload — /vault/backups</p>
+        </div>
+      </div>
+      <div class="readout"><span id="linVal">0</span><small>%</small></div>
+    </div>
+
+    <div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Data throughput progress" id="linTrack">
+      <div class="ticks" aria-hidden="true"></div>
+      <div class="fill" id="linFill"></div>
+    </div>
+    <div class="track-meta">
+      <span id="linSpeed">0 MB/s</span>
+      <span id="linEta">ETA —</span>
+    </div>
+
+    <div class="controls">
+      <button class="primary" id="linRun">▶ Simulate transfer</button>
+      <button id="linReset">Reset</button>
+      <button id="linMinus">−10</button>
+      <button id="linPlus">+10</button>
+    </div>
+  </section>
+
+  <!-- 2. CIRCULAR DIAL -->
+  <section class="panel">
+    <div class="panel-head">
+      <div class="panel-title">
+        <div class="idx">02</div>
+        <div>
+          <h2>Core Output</h2>
+          <p>reactor.dial — manual override</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dial-row">
+      <div class="dial" id="dial" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="62" aria-label="Core output level">
+        <svg viewBox="0 0 170 170" width="170" height="170">
+          <defs>
+            <linearGradient id="dialGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#1FA98F"/>
+              <stop offset="100%" stop-color="#3FE0C5"/>
+            </linearGradient>
+          </defs>
+          <circle class="bg-ring" cx="85" cy="85" r="70"></circle>
+          <circle class="prog-ring" id="dialRing" cx="85" cy="85" r="70"
+                  stroke-dasharray="439.8" stroke-dashoffset="439.8"></circle>
+        </svg>
+        <div class="dial-center">
+          <div class="val" id="dialVal">62</div>
+          <div class="lbl">PERCENT</div>
+        </div>
+      </div>
+
+      <div class="dial-info">
+        <p>Drag around the ring, click anywhere on it, or use your arrow keys after focusing it to set the core output level manually.</p>
+        <div class="hint" id="dialHint">Within safe range</div>
+        <div class="controls">
+          <button id="dialAuto">◎ Auto-tune</button>
+          <button id="dialReset">Reset</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. SEGMENTED STAGES -->
+  <section class="panel">
+    <div class="panel-head">
+      <div class="panel-title">
+        <div class="idx">03</div>
+        <div>
+          <h2>Deployment Sequence</h2>
+          <p>pipeline.stages — build → ship</p>
+        </div>
+      </div>
+      <div class="readout"><span id="stageCount">1</span><small>/5</small></div>
+    </div>
+
+    <div class="stages" id="stages"></div>
+
+    <div class="controls">
+      <button id="stagePrev">← Back</button>
+      <button class="primary" id="stageNext">Advance →</button>
+      <button id="stageReset">Reset</button>
+    </div>
+  </section>
+
+  <footer class="page">click, drag, and press the buttons — every instrument here is live</footer>
+</div>
+
+<script>
+/* ============================================================
+   Shared clock
+   ============================================================ */
+let startTime = Date.now();
+setInterval(() => {
+  const s = Math.floor((Date.now() - startTime) / 1000);
+  const hh = String(Math.floor(s/3600)).padStart(2,'0');
+  const mm = String(Math.floor((s%3600)/60)).padStart(2,'0');
+  const ss = String(s%60).padStart(2,'0');
+  document.getElementById('uptime').textContent = `${hh}:${mm}:${ss}`;
+}, 1000);
+
+/* ============================================================
+   1) LINEAR THROUGHPUT BAR
+   ============================================================ */
+(function(){
+  const fill = document.getElementById('linFill');
+  const valEl = document.getElementById('linVal');
+  const track = document.getElementById('linTrack');
+  const speedEl = document.getElementById('linSpeed');
+  const etaEl = document.getElementById('linEta');
+  const btnRun = document.getElementById('linRun');
+  const btnReset = document.getElementById('linReset');
+  const btnMinus = document.getElementById('linMinus');
+  const btnPlus = document.getElementById('linPlus');
+
+  // build tick marks
+  const ticks = track.querySelector('.ticks');
+  for(let i=0;i<20;i++){
+    const t = document.createElement('i');
+    ticks.appendChild(t);
+  }
+
+  let value = 0;
+  let timer = null;
+
+  function paint(){
+    fill.style.width = value + '%';
+    valEl.textContent = Math.round(value);
+    track.setAttribute('aria-valuenow', Math.round(value));
+
+    fill.classList.remove('state-warn','state-crit');
+    if(value >= 90) fill.classList.add('state-crit');
+    else if(value >= 70) fill.classList.add('state-warn');
+
+    if(value <= 0){
+      speedEl.textContent = '0 MB/s';
+      etaEl.textContent = 'ETA —';
+    } else if(value >= 100){
+      speedEl.textContent = 'complete';
+      etaEl.textContent = 'ETA 00:00';
+    }
+  }
+
+  function setValue(v){
+    value = Math.max(0, Math.min(100, v));
+    paint();
+  }
+
+  function runSim(){
+    if(timer) return;
+    btnRun.textContent = '■ Stop';
+    let remainingSeconds = Math.max(1, Math.round((100 - value) / 4));
+    timer = setInterval(() => {
+      value += 2 + Math.random()*3;
+      if(value >= 100){
+        value = 100;
+        clearInterval(timer);
+        timer = null;
+        btnRun.textContent = '▶ Simulate transfer';
+      }
+      const mb = (4 + Math.random()*6).toFixed(1);
+      speedEl.textContent = mb + ' MB/s';
+      remainingSeconds = Math.max(0, Math.round((100 - value) / 4));
+      const m = String(Math.floor(remainingSeconds/60)).padStart(2,'0');
+      const s = String(remainingSeconds%60).padStart(2,'0');
+      etaEl.textContent = value >= 100 ? 'ETA 00:00' : `ETA ${m}:${s}`;
+      paint();
+    }, 220);
+  }
+
+  function stopSim(){
+    clearInterval(timer);
+    timer = null;
+    btnRun.textContent = '▶ Simulate transfer';
+  }
+
+  btnRun.addEventListener('click', () => {
+    if(timer){ stopSim(); } else { runSim(); }
+  });
+  btnReset.addEventListener('click', () => { stopSim(); setValue(0); speedEl.textContent='0 MB/s'; etaEl.textContent='ETA —'; });
+  btnMinus.addEventListener('click', () => setValue(value - 10));
+  btnPlus.addEventListener('click', () => setValue(value + 10));
+
+  paint();
+})();
+
+/* ============================================================
+   2) CIRCULAR DIAL (draggable + keyboard accessible)
+   ============================================================ */
+(function(){
+  const dial = document.getElementById('dial');
+  const ring = document.getElementById('dialRing');
+  const valEl = document.getElementById('dialVal');
+  const hint = document.getElementById('dialHint');
+  const btnAuto = document.getElementById('dialAuto');
+  const btnReset = document.getElementById('dialReset');
+
+  const CIRC = 439.8;
+  let value = 62;
+  let dragging = false;
+  let autoTimer = null;
+
+  function paint(){
+    const offset = CIRC - (value/100) * CIRC;
+    ring.style.strokeDashoffset = offset;
+    valEl.textContent = Math.round(value);
+    dial.setAttribute('aria-valuenow', Math.round(value));
+
+    let color, text;
+    if(value >= 90){ color = 'var(--coral)'; text = 'Overload risk'; }
+    else if(value >= 70){ color = 'var(--amber)'; text = 'Elevated load'; }
+    else { color = 'var(--cyan)'; text = 'Within safe range'; }
+    hint.style.color = color;
+    hint.style.setProperty('--dot', color);
+    hint.textContent = text;
+    hint.style.setProperty('background','none');
+    hint.querySelector && null;
+    hint.style.setProperty('--x', '');
+    hint.style.setProperty('color', color);
+    // update dot color via pseudo-element workaround: set custom property
+    dial.style.setProperty('--ringColorA', color);
+  }
+
+  function setFromPointer(clientX, clientY){
+    const rect = dial.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    let angle = Math.atan2(clientY - cy, clientX - cx) * (180/Math.PI);
+    angle = (angle + 90 + 360) % 360; // rotate so 0 is at top
+    value = Math.round((angle/360) * 100);
+    paint();
+  }
+
+  dial.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    dial.setPointerCapture(e.pointerId);
+    setFromPointer(e.clientX, e.clientY);
+  });
+  dial.addEventListener('pointermove', (e) => {
+    if(!dragging) return;
+    setFromPointer(e.clientX, e.clientY);
+  });
+  dial.addEventListener('pointerup', () => dragging = false);
+  dial.addEventListener('pointercancel', () => dragging = false);
+
+  dial.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowUp' || e.key === 'ArrowRight'){ value = Math.min(100, value+5); paint(); e.preventDefault(); }
+    if(e.key === 'ArrowDown' || e.key === 'ArrowLeft'){ value = Math.max(0, value-5); paint(); e.preventDefault(); }
+  });
+
+  btnAuto.addEventListener('click', () => {
+    if(autoTimer){ clearInterval(autoTimer); autoTimer = null; btnAuto.textContent = '◎ Auto-tune'; return; }
+    btnAuto.textContent = '■ Stop';
+    autoTimer = setInterval(() => {
+      value += (Math.random()*16 - 8);
+      value = Math.max(4, Math.min(98, value));
+      paint();
+    }, 500);
+  });
+
+  btnReset.addEventListener('click', () => {
+    if(autoTimer){ clearInterval(autoTimer); autoTimer = null; btnAuto.textContent = '◎ Auto-tune'; }
+    value = 62;
+    paint();
+  });
+
+  paint();
+})();
+
+/* ============================================================
+   3) SEGMENTED STAGE PROGRESS
+   ============================================================ */
+(function(){
+  const stagesData = ['Design', 'Build', 'Test', 'Stage', 'Ship'];
+  const container = document.getElementById('stages');
+  const countEl = document.getElementById('stageCount');
+  const btnNext = document.getElementById('stageNext');
+  const btnPrev = document.getElementById('stagePrev');
+  const btnReset = document.getElementById('stageReset');
+
+  let current = 0; // index of active stage
+
+  function render(){
+    container.innerHTML = '';
+    stagesData.forEach((label, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'stage' + (i < current ? ' done' : '') + (i === current ? ' active' : '');
+      btn.innerHTML = `
+        <div class="stage-line"><div class="stage-line-fill"></div></div>
+        <div class="stage-node">${i < current ? '✓' : i+1}</div>
+        <div class="stage-label">${label}</div>
+      `;
+      btn.addEventListener('click', () => { current = i; update(); });
+      container.appendChild(btn);
+    });
+    countEl.textContent = current + 1;
+    btnPrev.disabled = current === 0;
+    btnNext.textContent = current === stagesData.length - 1 ? '✓ Complete' : 'Advance →';
+  }
+
+  function update(){ render(); }
+
+  btnNext.addEventListener('click', () => {
+    if(current < stagesData.length - 1){ current++; update(); }
+  });
+  btnPrev.addEventListener('click', () => {
+    if(current > 0){ current--; update(); }
+  });
+  btnReset.addEventListener('click', () => { current = 0; update(); });
+
+  render();
+})();
+</script>
+
+</body>
+</html>

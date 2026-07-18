@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Love You</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Caveat:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep: #1B0A0F;
+    --bg-mid: #341019;
+    --bg-warm: #4A1826;
+    --rose: #E8909F;
+    --rose-soft: #F4C2CB;
+    --gold: #D9AE6E;
+    --ivory: #FBF1EA;
+    --ivory-dim: rgba(251,241,234,0.6);
+    --seal: #7C1E29;
+    --seal-dark: #5B141C;
+    --paper: #FBF0E4;
+    --ink: #3B1F22;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0; padding:0;
+    height:100%;
+    background: var(--bg-deep);
+    color: var(--ivory);
+    font-family: 'Jost', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position: relative;
+    padding: 40px 20px;
+  }
+
+  /* ---------------- Ambient background ---------------- */
+  .bg-glow{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(circle at 22% 28%, rgba(217,174,110,0.14), transparent 42%),
+      radial-gradient(circle at 78% 68%, rgba(232,144,159,0.16), transparent 45%),
+      radial-gradient(circle at 50% 100%, rgba(74,24,38,0.9), transparent 60%),
+      linear-gradient(180deg, var(--bg-deep), var(--bg-mid) 60%, var(--bg-warm));
+    animation: drift 14s ease-in-out infinite alternate;
+  }
+  @keyframes drift{
+    0%{ filter: hue-rotate(0deg) brightness(1); }
+    100%{ filter: hue-rotate(6deg) brightness(1.06); }
+  }
+
+  #particles{
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .drift-heart{
+    position: absolute;
+    bottom: -40px;
+    color: var(--rose-soft);
+    opacity: 0;
+    font-size: 16px;
+    animation: rise linear forwards;
+  }
+  @keyframes rise{
+    0%{ opacity: 0; transform: translateY(0) translateX(0) rotate(0deg); }
+    10%{ opacity: .55; }
+    90%{ opacity: .35; }
+    100%{ opacity: 0; transform: translateY(-110vh) translateX(var(--drift-x, 20px)) rotate(25deg); }
+  }
+
+  /* ---------------- Layout ---------------- */
+  .stage{
+    position: relative;
+    z-index: 2;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 640px;
+    text-align: center;
+  }
+
+  .eyebrow{
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 0 0 10px;
+    opacity: .85;
+  }
+
+  .prompt{
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ivory-dim);
+    margin: 0 0 40px;
+    letter-spacing: .3px;
+  }
+
+  /* ---------------- Envelope ---------------- */
+  .envelope-wrap{
+    position: relative;
+    width: 280px;
+    height: 190px;
+    perspective: 1400px;
+    margin-bottom: 46px;
+  }
+
+  .aura{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 220px;
+    height: 220px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,144,159,0.35), transparent 70%);
+    z-index: 0;
+    animation: heartbeatAura 1.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes heartbeatAura{
+    0%, 100%{ transform: translate(-50%,-50%) scale(0.85); opacity: .55; }
+    14%{ transform: translate(-50%,-50%) scale(1.05); opacity: .8; }
+    28%{ transform: translate(-50%,-50%) scale(0.9); opacity: .6; }
+    42%{ transform: translate(-50%,-50%) scale(1.12); opacity: .85; }
+    60%{ transform: translate(-50%,-50%) scale(0.85); opacity: .5; }
+  }
+  .envelope-wrap.opened .aura{ animation: none; opacity: 0; transition: opacity .6s ease; }
+
+  .envelope{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 2;
+    transform-style: preserve-3d;
+    transition: transform .35s cubic-bezier(.16,1,.3,1);
+    will-change: transform;
+  }
+
+  .env-body{
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #F3E3D3, #E6CBAE);
+    border-radius: 10px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.06);
+    overflow: hidden;
+    z-index: 2;
+  }
+
+  .env-body::before, .env-body::after{
+    content:'';
+    position:absolute;
+    width: 0; height: 0;
+    border-style: solid;
+  }
+  /* left/right shading triangles to suggest envelope pocket */
+  .env-body::before{
+    left:0; top:0;
+    border-width: 95px 140px 95px 0;
+    border-color: transparent rgba(0,0,0,0.05) transparent transparent;
+  }
+  .env-body::after{
+    right:0; top:0;
+    border-width: 95px 0 95px 140px;
+    border-color: transparent transparent transparent rgba(0,0,0,0.05);
+  }
+
+  .env-flap{
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 95px;
+    background: linear-gradient(160deg, #EAD3BB, #DEBB98);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    transition: transform .7s cubic-bezier(.6,-0.28,.44,1.3);
+    z-index: 4;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  .envelope.open .env-flap{
+    transform: rotateX(180deg);
+    z-index: 1;
+  }
+
+  .letter{
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    width: 86%;
+    height: 82%;
+    background: var(--paper);
+    border-radius: 6px;
+    transform: translate(-50%, 6%) scale(0.97);
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    transition: transform .8s cubic-bezier(.16,1,.3,1) .15s, box-shadow .5s ease .2s;
+    z-index: 1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 18px;
+    overflow: hidden;
+  }
+
+  .envelope.open .letter{
+    transform: translate(-50%, -78%) scale(1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    z-index: 5;
+  }
+
+  .letter-text{
+    font-family: 'Caveat', cursive;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.15;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .letter-text.shimmer{
+    animation: shimmerGlow 2.2s ease-in-out 1;
+  }
+  @keyframes shimmerGlow{
+    0%{ text-shadow: 0 0 0 rgba(169,49,61,0); }
+    45%{ text-shadow: 0 0 14px rgba(169,49,61,0.45), 0 0 2px rgba(169,49,61,0.3); }
+    100%{ text-shadow: 0 0 0 rgba(169,49,61,0); }
+  }
+
+  .letter-text .char{
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: reveal .5s ease forwards;
+  }
+  @keyframes reveal{
+    to{ opacity: 1; transform: translateY(0); }
+  }
+
+  .seal{
+    position: absolute;
+    left: 50%;
+    top: 78px;
+    width: 58px;
+    height: 58px;
+    transform: translate(-50%, 0);
+    z-index: 6;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #A9313D, var(--seal) 60%, var(--seal-dark) 100%);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.4), inset 0 -3px 6px rgba(0,0,0,0.35), inset 0 3px 6px rgba(255,255,255,0.15);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition: transform .5s ease, opacity .4s ease;
+  }
+  .seal svg{ width: 26px; height: 26px; opacity: .9; position: relative; z-index: 2; }
+
+  .seal.idle{
+    animation: sealHeartbeat 1.8s ease-in-out infinite;
+  }
+  @keyframes sealHeartbeat{
+    0%, 100%{ transform: translate(-50%,0) scale(1); }
+    14%{ transform: translate(-50%,0) scale(1.09); }
+    28%{ transform: translate(-50%,0) scale(1); }
+    42%{ transform: translate(-50%,0) scale(1.14); }
+    60%{ transform: translate(-50%,0) scale(1); }
+  }
+
+  .seal-ripple{
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid var(--rose-soft);
+    opacity: 0;
+    transform: scale(1);
+    z-index: 1;
+  }
+  .seal-ripple.ping{
+    animation: sealPing .6s ease-out forwards;
+  }
+  @keyframes sealPing{
+    0%{ opacity: .8; transform: scale(1); }
+    100%{ opacity: 0; transform: scale(2.4); }
+  }
+
+  .envelope.open .seal{
+    animation: crack .5s ease forwards;
+  }
+  @keyframes crack{
+    0%{ transform: translate(-50%,0) scale(1) rotate(0); opacity:1; }
+    40%{ transform: translate(-50%,0) scale(1.15) rotate(-8deg); }
+    100%{ transform: translate(-58%,-6px) scale(0.9) rotate(-22deg); opacity: 0; }
+  }
+
+  .tap-hint{
+    position:absolute;
+    bottom: -34px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ivory-dim);
+    white-space: nowrap;
+    animation: pulseHint 2.2s ease-in-out infinite;
+  }
+  @keyframes pulseHint{
+    0%, 100%{ opacity: .5; }
+    50%{ opacity: 1; }
+  }
+  .envelope.open ~ .tap-hint{ opacity: 0; }
+
+  /* ---------------- Cycling subtext ---------------- */
+  .subline{
+    min-height: 26px;
+    margin: 4px 0 30px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--rose-soft);
+    opacity: 0;
+    transition: opacity .5s ease;
+  }
+  .subline.show{ opacity: 1; }
+
+  /* ---------------- Stats + actions ---------------- */
+  .stats{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ivory-dim);
+    margin-bottom: 30px;
+    opacity: 0;
+    transition: opacity .6s ease .3s;
+  }
+  .stats.show{ opacity: 1; }
+  .stats .num{
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    color: var(--gold);
+    font-size: 15px;
+  }
+  .stats::before{
+    content: '♥';
+    color: var(--rose);
+  }
+
+  .actions{
+    display:flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content:center;
+  }
+
+  button.cta{
+    font-family: 'Jost', sans-serif;
+    font-size: 13.5px;
+    letter-spacing: 1px;
+    padding: 14px 28px;
+    border-radius: 999px;
+    border: 1px solid rgba(251,241,234,0.25);
+    background: transparent;
+    color: var(--ivory);
+    cursor: pointer;
+    transition: all .25s ease, transform .15s ease;
+  }
+  button.cta:hover{
+    border-color: var(--rose);
+    background: rgba(232,144,159,0.1);
+    transform: translateY(-2px);
+  }
+  button.cta:active{ transform: translateY(0) scale(.97); }
+
+  button.cta.primary{
+    background: linear-gradient(135deg, var(--gold), #C68A4E);
+    color: #2B1206;
+    border: none;
+    font-weight: 500;
+    box-shadow: 0 10px 24px -10px rgba(217,174,110,0.6);
+  }
+  button.cta.primary:hover{
+    box-shadow: 0 14px 30px -10px rgba(217,174,110,0.8);
+    filter: brightness(1.06);
+  }
+
+  button:focus-visible{ outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  .toast{
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(27,10,15,0.9);
+    border: 1px solid rgba(251,241,234,0.15);
+    color: var(--ivory);
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    letter-spacing: .3px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .35s ease, transform .35s ease;
+    z-index: 10;
+  }
+  .toast.show{
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  #burst-canvas{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 8;
+  }
+
+  @media (max-width: 420px){
+    .envelope-wrap{ width: 230px; height: 158px; }
+    .letter-text{ font-size: 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: .001s !important; transition-duration: .2s !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<div id="particles" aria-hidden="true"></div>
+<canvas id="burst-canvas"></canvas>
+
+<div class="stage">
+  <p class="eyebrow">a small, honest thing</p>
+  <p class="prompt">There's a letter waiting. Open it.</p>
+
+  <div class="envelope-wrap" id="envelopeWrap">
+    <div class="aura" aria-hidden="true"></div>
+    <button class="envelope" id="envelope" aria-label="Open the letter">
+      <div class="env-body"></div>
+      <div class="letter">
+        <div class="letter-text" id="letterText"></div>
+      </div>
+      <div class="env-flap"></div>
+      <div class="seal idle" id="seal">
+        <div class="seal-ripple" id="sealRipple"></div>
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 21s-7.5-4.6-9.6-9C.7 8.4 2.6 5 6 5c2 0 3.5 1.1 4 2.4C10.5 6.1 12 5 14 5c3.4 0 5.3 3.4 3.6 7-2.1 4.4-9.6 9-9.6 9z" fill="var(--rose-soft)"/>
+        </svg>
+      </div>
+    </button>
+    <span class="tap-hint">tap the seal to open</span>
+  </div>
+
+  <p class="subline" id="subline"></p>
+  <p class="stats" id="stats"><span class="num" id="statNum">128,401</span>&nbsp;hearts warmed by this letter today</p>
+
+  <div class="actions">
+    <button class="cta" id="againBtn">↺ Seal it again</button>
+    <button class="cta primary" id="sendBtn">Send it back →</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Sent, with love ♥</div>
+
+<script>
+/* ---------------- Letter reveal ---------------- */
+const MESSAGE = "I LOVE YOU";
+const letterText = document.getElementById('letterText');
+letterText.innerHTML = MESSAGE.split('').map((ch, i) => {
+  const safe = ch === ' ' ? '&nbsp;' : ch;
+  return `<span class="char" style="animation-delay:${0.25 + i*0.06}s">${safe}</span>`;
+}).join('');
+
+const sublines = [
+  "more than words can carry",
+  "today, tomorrow, and every ordinary day after",
+  "quietly, and completely",
+  "even on the hard days",
+  "no translation needed"
+];
+const subEl = document.getElementById('subline');
+let subIndex = 0;
+function showSubline(){
+  subEl.classList.remove('show');
+  setTimeout(() => {
+    subEl.textContent = sublines[subIndex % sublines.length];
+    subIndex++;
+    subEl.classList.add('show');
+  }, 350);
+}
+
+/* ---------------- Envelope open / close ---------------- */
+const envelope = document.getElementById('envelope');
+const envelopeWrap = document.getElementById('envelopeWrap');
+const seal = document.getElementById('seal');
+const sealRipple = document.getElementById('sealRipple');
+const statsEl = document.getElementById('stats');
+const statNum = document.getElementById('statNum');
+let opened = false;
+let heartCount = 128401;
+let shimmerTimer = null;
+
+function pingRipple(){
+  sealRipple.classList.remove('ping');
+  void sealRipple.offsetWidth;
+  sealRipple.classList.add('ping');
+}
+
+function openEnvelope(){
+  if(opened) return;
+  opened = true;
+  envelope.classList.add('open');
+  envelopeWrap.classList.add('opened');
+  seal.classList.remove('idle');
+  pingRipple();
+  showSubline();
+  setTimeout(() => statsEl.classList.add('show'), 500);
+  heartCount += Math.floor(Math.random()*5) + 1;
+  statNum.textContent = heartCount.toLocaleString();
+  spawnHearts(14);
+  clearTimeout(shimmerTimer);
+  letterText.classList.remove('shimmer');
+  shimmerTimer = setTimeout(() => letterText.classList.add('shimmer'), 1500);
+}
+
+function closeEnvelope(){
+  opened = false;
+  envelope.classList.remove('open');
+  envelopeWrap.classList.remove('opened');
+  seal.classList.add('idle');
+  subEl.classList.remove('show');
+  statsEl.classList.remove('show');
+  clearTimeout(shimmerTimer);
+  letterText.classList.remove('shimmer');
+}
+
+envelope.addEventListener('click', () => {
+  if(!opened) openEnvelope();
+});
+envelope.addEventListener('keydown', (e) => {
+  if((e.key === 'Enter' || e.key === ' ') && !opened){
+    e.preventDefault();
+    openEnvelope();
+  }
+});
+
+/* ---------------- 3D tilt on hover ---------------- */
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(!prefersReduced){
+  envelopeWrap.addEventListener('pointermove', (e) => {
+    if(opened) return;
+    const rect = envelopeWrap.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    const rotY = px * 22;
+    const rotX = -py * 18;
+    envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(${-Math.abs(py)*4}px)`;
+  });
+  envelopeWrap.addEventListener('pointerleave', () => {
+    envelope.style.transform = '';
+  });
+}
+
+document.getElementById('againBtn').addEventListener('click', () => {
+  closeEnvelope();
+  // allow re-seal animation to settle, then it's tappable again
+  const sealCrack = envelope.querySelector('.seal');
+  sealCrack.style.animation = 'none';
+  void sealCrack.offsetWidth;
+  sealCrack.style.animation = '';
+});
+
+/* ---------------- Ambient floating hearts ---------------- */
+const particlesEl = document.getElementById('particles');
+const heartGlyphs = ['♥','❤','♡'];
+function spawnAmbient(){
+  const el = document.createElement('span');
+  el.className = 'drift-heart';
+  el.textContent = heartGlyphs[Math.floor(Math.random()*heartGlyphs.length)];
+  el.style.left = Math.random()*100 + 'vw';
+  el.style.setProperty('--drift-x', (Math.random()*80 - 40) + 'px');
+  el.style.fontSize = (12 + Math.random()*14) + 'px';
+  el.style.animationDuration = (9 + Math.random()*7) + 's';
+  particlesEl.appendChild(el);
+  setTimeout(() => el.remove(), 17000);
+}
+setInterval(spawnAmbient, 900);
+for(let i=0;i<6;i++) setTimeout(spawnAmbient, i*300);
+
+/* ---------------- Click / open heart burst (small) ---------------- */
+function spawnHearts(n){
+  for(let i=0;i<n;i++){
+    const el = document.createElement('span');
+    el.className = 'drift-heart';
+    el.textContent = '♥';
+    el.style.left = (44 + Math.random()*12) + 'vw';
+    el.style.bottom = '38vh';
+    el.style.setProperty('--drift-x', (Math.random()*160 - 80) + 'px');
+    el.style.color = 'var(--gold)';
+    el.style.fontSize = (14 + Math.random()*10) + 'px';
+    el.style.animationDuration = (2.5 + Math.random()*2) + 's';
+    particlesEl.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+  }
+}
+
+/* ---------------- Big confetti burst on Send ---------------- */
+const canvas = document.getElementById('burst-canvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+let particles = [];
+function burstConfetti(){
+  const colors = ['#E8909F', '#D9AE6E', '#F4C2CB', '#FBF1EA'];
+  const cx = canvas.width/2, cy = canvas.height/2;
+  for(let i=0;i<70;i++){
+    const angle = Math.random()*Math.PI*2;
+    const speed = 3 + Math.random()*7;
+    particles.push({
+      x: cx, y: cy,
+      vx: Math.cos(angle)*speed,
+      vy: Math.sin(angle)*speed - 2,
+      size: 6 + Math.random()*8,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*Math.PI*2,
+      vr: (Math.random()-0.5)*0.3,
+      life: 0,
+      shape: Math.random() > 0.5 ? 'heart' : 'dot'
+    });
+  }
+}
+
+function drawHeart(x, y, size, color, rot){
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.rotate(rot);
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  const s = size/2;
+  ctx.moveTo(0, s*0.3);
+  ctx.bezierCurveTo(0, 0, -s, 0, -s, s*0.5);
+  ctx.bezierCurveTo(-s, s*1.1, 0, s*1.4, 0, s*1.8);
+  ctx.bezierCurveTo(0, s*1.4, s, s*1.1, s, s*0.5);
+  ctx.bezierCurveTo(s, 0, 0, 0, 0, s*0.3);
+  ctx.fill();
+  ctx.restore();
+}
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.12;
+    p.vx *= 0.99;
+    p.rot += p.vr;
+    p.life++;
+    const alpha = Math.max(0, 1 - p.life/90);
+    ctx.globalAlpha = alpha;
+    if(p.shape === 'heart'){
+      drawHeart(p.x, p.y, p.size, p.color, p.rot);
+    } else {
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size/3, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+  ctx.globalAlpha = 1;
+  particles = particles.filter(p => p.life < 90);
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* ---------------- Send it back ---------------- */
+const toast = document.getElementById('toast');
+let toastTimer = null;
+document.getElementById('sendBtn').addEventListener('click', () => {
+  burstConfetti();
+  if(!opened) openEnvelope();
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+});
+</script>
+
+</body>
+</html>
